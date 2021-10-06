@@ -75,9 +75,9 @@ def get_possible_course_list(start_term, finish_term):
 
     # Foundation course terms
     foundation_courses = course_offerings[course_offerings.Type == 'foundation']
-    for r, row in foundation_courses.iterrows():
-        print('--> r:   ', r)
-        print('--> row: ', row)
+    for row_number, row in foundation_courses.iterrows():
+        print('--> row_number: ', row_number)
+        print('--> row:        ', row)
         problem.addVariable(row.Course, create_term_list(list(row[row == 1].index)))
 
     # TODO: Start Here
@@ -104,17 +104,26 @@ def get_possible_course_list(start_term, finish_term):
     return solutions.sort_values().map(map_to_term_label)
 
 
-# Print heading
-print("CLASS: Artificial Intelligence, Lewis University")
-print("NAME: [put your name here]")
+def main():
+    """ Runs the main program for the game. """
 
-# Check for possible schedules for all start terms
-for start in [1]:
-    print('START TERM = ' + map_to_term_label(start))
-    s = get_possible_course_list(start, start + 13)
-    if s.empty:
-        print('NO POSSIBLE SCHEDULE!')
-    else:
-        s2 = pd.Series(s.index.values, index=s)
-        print(s2.to_string())
-    print()
+    # Print out the header info
+    print('CLASS: Artificial Intelligence, Lewis University')
+    print('MP3: Course Planning using a Constraint Satisfaction Problem Formulation')
+    print('SEMESTER: FALL 2021, TERM 1')
+    print('NAME: ALISON MAJOR\n')
+
+    # Check for possible schedules for all start terms
+    for start in [1]:
+        print('START TERM = ' + map_to_term_label(start))
+        solution_1 = get_possible_course_list(start, start + 13)
+        if solution_1.empty:
+            print('NO POSSIBLE SCHEDULE!')
+        else:
+            solution_2 = pd.Series(solution_1.index.values, index=solution_1)
+            print(solution_2.to_string())
+        print()
+
+
+if __name__ == "__main__":
+    main()

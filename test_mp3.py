@@ -2,8 +2,8 @@
 import unittest
 
 
-class TestMyProjectClass(unittest.TestCase):
-    """ Will run tests against modules and functions in the MyProjectClass class. """
+class TestCoursePlanning(unittest.TestCase):
+    """ Will run tests against modules and functions used for course planning. """
 
     def test_create_term_list(self):
         """ Tests the creation of a list of term indexes for years in the future. """

@@ -80,3 +80,13 @@ Year 2 Summer 2   CPSC-52500
 Year 3 Fall 1     CPSC-55000
 Year 3 Fall 2     CPSC-59000
 ```
+
+# Dependencies
+
+## openpyxl
+
+You will need `openpyxl` to open the files.
+
+```shell
+pip install openpyxl
+```
