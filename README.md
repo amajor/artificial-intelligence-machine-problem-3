@@ -1,5 +1,5 @@
-[![Unit Tests](https://github.com/amajor/artificial-intelligence-machine-problem-3/actions/workflows/python-test.yml/badge.svg)](https://github.com/amajor/artificial-intelligence-machine-problem-2/actions/workflows/python-test.yml)
-[![Pylint](https://github.com/amajor/artificial-intelligence-machine-problem-3/actions/workflows/pylint.yml/badge.svg)](https://github.com/amajor/artificial-intelligence-machine-problem-2/actions/workflows/pylint.yml)
+[![Unit Tests](https://github.com/amajor/artificial-intelligence-machine-problem-3/actions/workflows/python-test.yml/badge.svg)](https://github.com/amajor/artificial-intelligence-machine-problem-3/actions/workflows/python-test.yml)
+[![Pylint](https://github.com/amajor/artificial-intelligence-machine-problem-3/actions/workflows/pylint.yml/badge.svg)](https://github.com/amajor/artificial-intelligence-machine-problem-3/actions/workflows/pylint.yml)
 
 # Artificial Intelligence 
 ## Machine Problem 3 – Course Planning using a Constraint Satisfaction Problem Formulation
