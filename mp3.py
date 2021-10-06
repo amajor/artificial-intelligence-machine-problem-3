@@ -47,7 +47,7 @@ def map_to_term_label(term_num):
     return 'Year ' + year + ' ' + term_label
 
 
-def pre_requisite(prerequisite_course, other_course):
+def prerequisite(prerequisite_course, other_course):
     """ Used for encoding prerequisite constraints, a is a prerequisite for b. """
     if prerequisite_course > 0 and other_course > 0:
         # Taking both pre-req course and other course
@@ -58,7 +58,9 @@ def pre_requisite(prerequisite_course, other_course):
     if prerequisite_course < 0 < other_course:
         # Taking other course, but not pre-req course
         return False
-    return True  # Not taking pre-req a or course b
+
+    # Not taking pre-req course or other course
+    return True
 
 
 def get_possible_course_list(start_term, finish_term):
@@ -71,7 +73,7 @@ def get_possible_course_list(start_term, finish_term):
 
     # Read course_offerings file
     course_offerings = pd.read_excel('csp_course_rotations.xlsx', sheet_name='course_rotations')
-    # course_prereqs = pd.read_excel('csp_course_rotations.xlsx', sheet_name='prereqs')
+    # course_prerequisites = pd.read_excel('csp_course_rotations.xlsx', sheet_name='prereqs')
 
     # Foundation course terms
     foundation_courses = course_offerings[course_offerings.Type == 'foundation']

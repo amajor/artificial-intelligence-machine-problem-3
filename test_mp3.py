@@ -46,9 +46,17 @@ class TestCoursePlanning(unittest.TestCase):
         actual_label = mp3.map_to_term_label(term_number)
         self.assertEqual(expected_label, actual_label)
 
-    def test_pre_requisite(self):
+    @parameterized.expand([
+        ('Taking first pre-req, then course', 1, 2, True),
+        ('Taking first course, then pre-req', 3, 2, False),
+        ('Taking pre-req, not other course', 1, -1, True),
+        ('Taking other course, not pre-req', -1, 1, False),
+        ('Not taking pre-req or other course', 0, 0, True)
+    ])
+    def test_pre_requisite(self, _test_name, taking_prerequisite, taking_course, expected):
         """ Tests the limitations constraints for prerequisite courses. """
-        self.skipTest('Test not yet created.')
+        actual = mp3.prerequisite(taking_prerequisite, taking_course)
+        self.assertEqual(expected, actual)
 
     def test_get_possible_course_list(self):
         """ Tests the course schedule generation. """
