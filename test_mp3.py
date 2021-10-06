@@ -8,9 +8,28 @@ import mp3
 class TestCoursePlanning(unittest.TestCase):
     """ Will run tests against modules and functions used for course planning. """
 
-    def test_create_term_list(self):
+    @parameterized.expand([
+        (
+            'Fall and Spring only for 3 years',
+            [0, 1, 2, 3],  # desired terms
+            3,             # desired years
+            [0, 1, 2, 3, 6, 7, 8, 9, 12, 13, 14, 15]
+        ), (
+            'All terms only for 2 years',
+            [0, 1, 2, 3, 4, 5],  # desired terms
+            2,                   # desired years
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        ), (
+            'Start in spring, only Spring & Fall',
+            [2, 3, 6, 7],  # desired terms
+            4,             # desired years
+            [2, 3, 6, 7, 8, 9, 12, 13, 14, 15, 18, 19, 20, 21, 24, 25]
+        )
+    ])
+    def test_create_term_list(self, _test_name, desired_terms, desired_years, expected_list):
         """ Tests the creation of a list of term indexes for years in the future. """
-        self.skipTest('Test not yet created.')
+        actual_list = mp3.create_term_list(desired_terms, desired_years)
+        self.assertEqual(expected_list, actual_list)
 
     @parameterized.expand([
         ('Term number 0 is "Not Taken"', 0, 'Not Taken'),
