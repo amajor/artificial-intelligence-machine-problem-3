@@ -78,26 +78,42 @@ def get_possible_course_list(start_term, finish_term):
     # Foundation course terms
     foundation_courses = course_offerings[course_offerings.Type == 'foundation']
     for row_number, row in foundation_courses.iterrows():
-        print('--> row_number: ', row_number)
-        print('--> row:        ', row)
-        problem.addVariable(row.Course, create_term_list(list(row[row == 1].index)))
+        course_label = row.Course
+        course_available_terms = create_term_list(list(row[row == 1].index))
+        problem.addVariable(course_label, course_available_terms)
 
-    # TODO: Start Here
     # Core course terms
+    core_courses = course_offerings[course_offerings.Type == 'core']
+    for row_number, row in core_courses.iterrows():
+        course_label = row.Course
+        course_available_terms = create_term_list(list(row[row == 1].index))
+        problem.addVariable(course_label, course_available_terms)
 
     # CS Electives course terms (-x = elective not taken)
+    elective_courses = course_offerings[course_offerings.Type == 'elective']
+    for row_number, row in elective_courses.iterrows():
+        course_label = row.Course
+        course_available_terms = create_term_list(list(row[row == 1].index))
+        problem.addVariable(course_label, course_available_terms)
 
     # Capstone
+    capstone_courses = course_offerings[course_offerings.Type == 'capstone']
+    for row_number, row in capstone_courses.iterrows():
+        course_label = row.Course
+        course_available_terms = create_term_list(list(row[row == 1].index))
+        problem.addVariable(course_label, course_available_terms)
 
     # Guarantee no repeats of courses
+    # TODO: add steps to prevent repeat of courses
 
     # Control start and finish terms
+    # TODO: add step to control start and finish terms
 
     # Control electives - exactly 3 courses must be chosen
+    # TODO: add step to limit to only 3 electives
 
-    # Pre-reqs
-
-    # TODO: End Here
+    # Pre-requisites
+    # TODO: add step to limit to prerequisites before courses
 
     # Generate a possible solution
     sol = problem.getSolutions()
