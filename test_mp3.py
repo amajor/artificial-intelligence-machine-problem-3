@@ -77,9 +77,17 @@ class TestCoursePlanning(unittest.TestCase):
         actual = problem.getSolutions()
         self.assertEqual(expected, actual)
 
-    def test_get_possible_course_list(self):
-        """ Tests the course schedule generation. """
-        self.skipTest('Test not yet created.')
+    def test_get_possible_course_list_no_repeats(self):
+        """ Tests the courses are not repeated and only 1 course per term. """
+        self.skipTest('Need to allow for file input to control test data.')
+
+    def test_get_possible_course_list_start_term(self):
+        """ Tests the input start term is included in final solution. """
+        self.skipTest('No test written.')
+
+    def test_get_possible_course_list_finish_term(self):
+        """ Tests the input start term is included in final solution. """
+        self.skipTest('No test written.')
 
 
 if __name__ == '__main__':
