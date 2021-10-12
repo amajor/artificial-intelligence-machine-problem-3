@@ -1,4 +1,6 @@
 """ The unit tests for the GenGameBoard class. """
+import io
+import sys
 import unittest
 
 from constraint import Problem
@@ -86,25 +88,64 @@ class TestCoursePlanning(unittest.TestCase):
         actual = mp3.remove_terms_beyond_finish(all_terms, finish_term)
         self.assertEqual(expected, actual)
 
+    def test_get_possible_course_list(self):
+        """ Test the possible course list output based on hard-coded file. """
+        # Create the path and capture the output.
+        captured_output = io.StringIO()  # Create StringIO object
+        sys.stdout = captured_output  # and redirect stdout.
+
+        # Run the main program.
+        mp3.main()
+
+        # Confirm printing of correct START_TERM.
+        expected_start_term_msg = 'START TERM  = Year 1 Fall 1'
+        self.assertIn(expected_start_term_msg, captured_output.getvalue())
+
+        # Confirm the expected sample output.
+        expected_course_plan = '''START TERM  = Year 1 Fall 1
+FINISH TERM = Year 3 Fall 2
+Number of Possible Degree Plans is 9488
+
+Sample Degree Plan
+Not Taken          CPSC-57400
+Not Taken          CPSC-57200
+Not Taken          CPSC-57100
+Not Taken          CPSC-55200
+Not Taken          CPSC-51700
+Year 1 Fall 1      CPSC-50600
+Year 1 Fall 2      MATH-51100
+Year 1 Spring 1    MATH-51000
+Year 1 Spring 2    MATH-51200
+Year 1 Summer 1    CPSC-50100
+Year 2 Fall 1      CPSC-51100
+Year 2 Fall 2      CPSC-53000
+Year 2 Spring 1    CPSC-54000
+Year 2 Spring 2    CPSC-55500
+Year 2 Summer 1    CPSC-51000
+Year 2 Summer 2    CPSC-52500
+Year 3 Fall 1      CPSC-55000
+Year 3 Fall 2      CPSC-59000'''
+        self.assertIn(expected_course_plan, captured_output.getvalue())
+
     def test_get_possible_course_list_no_repeats(self):
         """ Tests the courses are not repeated and only 1 course per term. """
         self.skipTest('Need to allow for file input to control test data.')
 
     def test_get_possible_course_list_start_term(self):
         """ Tests the input start term is included in final solution. """
-        self.skipTest('No test written.')
+        self.skipTest('No test written; see general test for get_possible_course_list')
 
     def test_get_possible_course_list_finish_term(self):
         """ Tests the input start term is included in final solution. """
-        self.skipTest('No test written.')
+        self.skipTest('No test written; see general test for get_possible_course_list')
 
     def test_get_possible_course_list_number_of_electives(self):
         """ Tests that only 3 electives are added to the plan. """
-        self.skipTest('No test written.')
+        self.skipTest('No test written; see general test for get_possible_course_list')
 
     def test_get_possible_course_list_prerequisites(self):
         """ Tests that the plan is limited by prerequisite courses. """
-        self.skipTest('No test written')
+        self.skipTest('No test written; see general test for get_possible_course_list')
 
 
 if __name__ == '__main__':
