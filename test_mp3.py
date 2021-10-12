@@ -89,6 +89,10 @@ class TestCoursePlanning(unittest.TestCase):
         """ Tests the input start term is included in final solution. """
         self.skipTest('No test written.')
 
+    def test_get_possible_course_list_number_of_electives(self):
+        """ Tests that only 3 electives are added to the plan. """
+        self.skipTest('No test written.')
+
 
 if __name__ == '__main__':
     unittest.main()

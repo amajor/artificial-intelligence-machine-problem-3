@@ -91,10 +91,14 @@ def get_possible_course_list(start_term, finish_term):
 
     # CS Electives course terms (-x = elective not taken)
     elective_courses = course_offerings[course_offerings.Type == 'elective']
-    for _row_num, row in elective_courses.iterrows():
+    negative_elective_terms = []
+    for row_num, row in elective_courses.iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
-        problem.addVariable(course_label, course_available_terms)
+        problem.addVariable(course_label, course_available_terms + [-row_num])
+
+        # Keep track of the negative terms for electives to use later
+        negative_elective_terms.append(-row_num)
 
     # Capstone
     capstone_courses = course_offerings[course_offerings.Type == 'capstone']
@@ -111,10 +115,12 @@ def get_possible_course_list(start_term, finish_term):
     problem.addConstraint(SomeInSetConstraint([finish_term]))
 
     # Control electives - exactly 3 courses must be chosen
-    # TODO: add step to limit to only 3 electives
-
     # Pre-requisites
     # TODO: add step to limit to prerequisites before courses
+    number_of_electives_desired = 3
+    number_of_electives_ignored = len(elective_courses) - number_of_electives_desired
+    problem.addConstraint(SomeInSetConstraint(negative_elective_terms, n=number_of_electives_ignored, exact=True))
+
 
     # Generate a possible solution
     sol = problem.getSolutions()
