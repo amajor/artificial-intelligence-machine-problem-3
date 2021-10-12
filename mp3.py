@@ -17,7 +17,7 @@ ASSUMPTION: term numbers start with 1
 """
 import pandas as pd
 # import numpy as np
-from constraint import Problem
+from constraint import Problem, AllDifferentConstraint
 
 
 def create_term_list(terms, years=4):
@@ -103,8 +103,8 @@ def get_possible_course_list(start_term, finish_term):
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
 
-    # Guarantee no repeats of courses
-    # TODO: add steps to prevent repeat of courses
+    # Guarantee no repeats of courses and only once course per term
+    problem.addConstraint(AllDifferentConstraint())
 
     # Control start and finish terms
     # TODO: add step to control start and finish terms
