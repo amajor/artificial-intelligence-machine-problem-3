@@ -77,28 +77,28 @@ def get_possible_course_list(start_term, finish_term):
 
     # Foundation course terms
     foundation_courses = course_offerings[course_offerings.Type == 'foundation']
-    for row_number, row in foundation_courses.iterrows():
+    for _row_num, row in foundation_courses.iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
 
     # Core course terms
     core_courses = course_offerings[course_offerings.Type == 'core']
-    for row_number, row in core_courses.iterrows():
+    for _row_num, row in core_courses.iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
 
     # CS Electives course terms (-x = elective not taken)
     elective_courses = course_offerings[course_offerings.Type == 'elective']
-    for row_number, row in elective_courses.iterrows():
+    for _row_num, row in elective_courses.iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
 
     # Capstone
     capstone_courses = course_offerings[course_offerings.Type == 'capstone']
-    for row_number, row in capstone_courses.iterrows():
+    for _row_num, row in capstone_courses.iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
@@ -117,13 +117,17 @@ def get_possible_course_list(start_term, finish_term):
 
     # Generate a possible solution
     sol = problem.getSolutions()
+
+    # Print number of solutions
     print(len(sol))
+
+    # Return the top solution
     solutions = pd.Series(sol[0])
     return solutions.sort_values().map(map_to_term_label)
 
 
 def main():
-    """ Runs the main program for the game. """
+    """ Runs the main program for the course planning. """
 
     # Print out the header info
     print('CLASS: Artificial Intelligence, Lewis University')
