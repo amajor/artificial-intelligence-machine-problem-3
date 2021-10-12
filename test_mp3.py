@@ -77,6 +77,15 @@ class TestCoursePlanning(unittest.TestCase):
         actual = problem.getSolutions()
         self.assertEqual(expected, actual)
 
+    @parameterized.expand([
+        ('All terms greater than 5 are removed', [1, 3, 5, 7, 9], 5, [1, 3, 5]),
+        ('All terms greater than 2 are removed', [2, 1, 9, 5, 3, 7], 2, [2, 1]),
+    ])
+    def test_remove_terms_beyond_finish(self, _test_name, all_terms, finish_term, expected):
+        """ Tests that we remove any terms beyond our finish. """
+        actual = mp3.remove_terms_beyond_finish(all_terms, finish_term)
+        self.assertEqual(expected, actual)
+
     def test_get_possible_course_list_no_repeats(self):
         """ Tests the courses are not repeated and only 1 course per term. """
         self.skipTest('Need to allow for file input to control test data.')

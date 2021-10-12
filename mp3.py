@@ -28,6 +28,11 @@ def create_term_list(terms, years=4):
     return all_terms
 
 
+def remove_terms_beyond_finish(all_terms, finish_term):
+    """ Remove all terms that are beyond the finish term. """
+    return [x for x in all_terms if x <= finish_term]
+
+
 def map_to_term_label(term_num):
     """ Returns the label of a term, given its number. """
     term_num_to_label_map = {
@@ -74,31 +79,55 @@ def get_possible_course_list(start_term, finish_term):
 
     # Foundation course terms
     for _row_num, row in course_offerings[course_offerings.Type == 'foundation'].iterrows():
+        # Capture course information
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
+
+        # Remove terms beyond the Finish Term
+        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
+
+        # Add the variable to the problem
         problem.addVariable(course_label, course_available_terms)
 
     # Core course terms
     for _row_num, row in course_offerings[course_offerings.Type == 'core'].iterrows():
+        # Capture course information
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
+
+        # Remove terms beyond the Finish Term
+        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
+
+        # Add the variable to the problem
         problem.addVariable(course_label, course_available_terms)
 
     # CS Electives course terms (-x = elective not taken)
     negative_elective_terms = []
     elective_courses = course_offerings[course_offerings.Type == 'elective']
     for row_num, row in elective_courses.iterrows():
+        # Capture course information
         course_label = row.Course
-        course_available_terms = create_term_list(list(row[row == 1].index))
-        problem.addVariable(course_label, course_available_terms + [-row_num])
+        course_available_terms = create_term_list(list(row[row == 1].index)) + [-row_num]
+
+        # Remove terms beyond the Finish Term
+        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
+
+        # Add the variable to the problem
+        problem.addVariable(course_label, course_available_terms)
 
         # Keep track of the negative terms for electives to use later
         negative_elective_terms.append(-row_num)
 
     # Capstone
     for _row_num, row in course_offerings[course_offerings.Type == 'capstone'].iterrows():
+        # Capture course information
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
+
+        # Remove terms beyond the Finish Term
+        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
+
+        # Add the variable to the problem
         problem.addVariable(course_label, course_available_terms)
 
     # Guarantee no repeats of courses and only once course per term
@@ -118,7 +147,7 @@ def get_possible_course_list(start_term, finish_term):
     row_num = 0
     while row_num < len(course_prerequisites):
         problem.addConstraint(prerequisite, [
-            course_prerequisites.iloc[row_num]['prereq'], # the prerequisite course
+            course_prerequisites.iloc[row_num]['prereq'],  # the prerequisite course
             course_prerequisites.iloc[row_num]['course']  # the other course
         ])
         row_num += 1
@@ -127,7 +156,7 @@ def get_possible_course_list(start_term, finish_term):
     sol = problem.getSolutions()
 
     # Print number of solutions
-    print(len(sol))
+    print('Number of Possible Degree Plans is', len(sol))
 
     # Return the top solution
     solutions = pd.Series(sol[0])
@@ -145,12 +174,15 @@ def main():
 
     # Check for possible schedules for all start terms
     for start in [1]:
-        print('START TERM = ' + map_to_term_label(start))
-        solution_1 = get_possible_course_list(start, start + 13)
+        finish = start + 13
+        print('START TERM  = ' + map_to_term_label(start))
+        print('FINISH TERM = ' + map_to_term_label(finish))
+        solution_1 = get_possible_course_list(start, finish)
         if solution_1.empty:
-            print('NO POSSIBLE SCHEDULE!')
+            print('\nNO POSSIBLE SCHEDULE!')
         else:
             solution_2 = pd.Series(solution_1.index.values, index=solution_1)
+            print('\nSample Degree Plan')
             print(solution_2.to_string())
         print()
 
