@@ -93,6 +93,10 @@ class TestCoursePlanning(unittest.TestCase):
         """ Tests that only 3 electives are added to the plan. """
         self.skipTest('No test written.')
 
+    def test_get_possible_course_list_prerequisites(self):
+        """ Tests that the plan is limited by prerequisite courses. """
+        self.skipTest('No test written')
+
 
 if __name__ == '__main__':
     unittest.main()

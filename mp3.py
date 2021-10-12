@@ -16,7 +16,6 @@ It assigns a negative term number if course is not taken (e.g. elective that is 
 ASSUMPTION: term numbers start with 1
 """
 import pandas as pd
-# import numpy as np
 from constraint import Problem, AllDifferentConstraint, SomeInSetConstraint
 
 
@@ -73,7 +72,7 @@ def get_possible_course_list(start_term, finish_term):
 
     # Read course_offerings file
     course_offerings = pd.read_excel('csp_course_rotations.xlsx', sheet_name='course_rotations')
-    # course_prerequisites = pd.read_excel('csp_course_rotations.xlsx', sheet_name='prereqs')
+    course_prerequisites = pd.read_excel('csp_course_rotations.xlsx', sheet_name='prereqs')
 
     # Foundation course terms
     foundation_courses = course_offerings[course_offerings.Type == 'foundation']
@@ -115,12 +114,17 @@ def get_possible_course_list(start_term, finish_term):
     problem.addConstraint(SomeInSetConstraint([finish_term]))
 
     # Control electives - exactly 3 courses must be chosen
-    # Pre-requisites
-    # TODO: add step to limit to prerequisites before courses
     number_of_electives_desired = 3
     number_of_electives_ignored = len(elective_courses) - number_of_electives_desired
     problem.addConstraint(SomeInSetConstraint(negative_elective_terms, n=number_of_electives_ignored, exact=True))
 
+    # Set constraints for the Pre-requisites.
+    row_num = 0
+    while row_num < len(course_prerequisites):
+        prereq_course = course_prerequisites.iloc[row_num]['prereq']
+        other_course = course_prerequisites.iloc[row_num]['course']
+        problem.addConstraint(prerequisite, [prereq_course, other_course])
+        row_num += 1
 
     # Generate a possible solution
     sol = problem.getSolutions()
