@@ -75,22 +75,20 @@ def get_possible_course_list(start_term, finish_term):
     course_prerequisites = pd.read_excel('csp_course_rotations.xlsx', sheet_name='prereqs')
 
     # Foundation course terms
-    foundation_courses = course_offerings[course_offerings.Type == 'foundation']
-    for _row_num, row in foundation_courses.iterrows():
+    for _row_num, row in course_offerings[course_offerings.Type == 'foundation'].iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
 
     # Core course terms
-    core_courses = course_offerings[course_offerings.Type == 'core']
-    for _row_num, row in core_courses.iterrows():
+    for _row_num, row in course_offerings[course_offerings.Type == 'core'].iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
 
     # CS Electives course terms (-x = elective not taken)
-    elective_courses = course_offerings[course_offerings.Type == 'elective']
     negative_elective_terms = []
+    elective_courses = course_offerings[course_offerings.Type == 'elective']
     for row_num, row in elective_courses.iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
@@ -100,8 +98,7 @@ def get_possible_course_list(start_term, finish_term):
         negative_elective_terms.append(-row_num)
 
     # Capstone
-    capstone_courses = course_offerings[course_offerings.Type == 'capstone']
-    for _row_num, row in capstone_courses.iterrows():
+    for _row_num, row in course_offerings[course_offerings.Type == 'capstone'].iterrows():
         course_label = row.Course
         course_available_terms = create_term_list(list(row[row == 1].index))
         problem.addVariable(course_label, course_available_terms)
@@ -114,16 +111,18 @@ def get_possible_course_list(start_term, finish_term):
     problem.addConstraint(SomeInSetConstraint([finish_term]))
 
     # Control electives - exactly 3 courses must be chosen
-    number_of_electives_desired = 3
-    number_of_electives_ignored = len(elective_courses) - number_of_electives_desired
-    problem.addConstraint(SomeInSetConstraint(negative_elective_terms, n=number_of_electives_ignored, exact=True))
+    number_of_electives_ignored = len(elective_courses) - 3
+    problem.addConstraint(
+        SomeInSetConstraint(negative_elective_terms, n=number_of_electives_ignored, exact=True)
+    )
 
     # Set constraints for the Pre-requisites.
     row_num = 0
     while row_num < len(course_prerequisites):
-        prereq_course = course_prerequisites.iloc[row_num]['prereq']
-        other_course = course_prerequisites.iloc[row_num]['course']
-        problem.addConstraint(prerequisite, [prereq_course, other_course])
+        problem.addConstraint(prerequisite, [
+            course_prerequisites.iloc[row_num]['prereq'], # the prerequisite course
+            course_prerequisites.iloc[row_num]['course']  # the other course
+        ])
         row_num += 1
 
     # Generate a possible solution
