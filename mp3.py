@@ -17,7 +17,7 @@ ASSUMPTION: term numbers start with 1
 """
 import pandas as pd
 # import numpy as np
-from constraint import Problem, AllDifferentConstraint
+from constraint import Problem, AllDifferentConstraint, SomeInSetConstraint
 
 
 def create_term_list(terms, years=4):
@@ -107,7 +107,8 @@ def get_possible_course_list(start_term, finish_term):
     problem.addConstraint(AllDifferentConstraint())
 
     # Control start and finish terms
-    # TODO: add step to control start and finish terms
+    problem.addConstraint(SomeInSetConstraint([start_term]))
+    problem.addConstraint(SomeInSetConstraint([finish_term]))
 
     # Control electives - exactly 3 courses must be chosen
     # TODO: add step to limit to only 3 electives
