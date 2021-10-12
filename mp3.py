@@ -67,6 +67,20 @@ def prerequisite(prereq_course_term, other_course_term):
     return True
 
 
+def add_courses_to_problem_by_filter(filter_term, course_offerings, finish_term, problem):
+    """ Adds the courses to the problem by filtering based on the term. """
+    for _row_num, row in course_offerings[course_offerings.Type == filter_term].iterrows():
+        # Capture course information
+        course_label = row.Course
+        course_available_terms = create_term_list(list(row[row == 1].index))
+
+        # Remove terms beyond the Finish Term
+        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
+
+        # Add the variable to the problem
+        problem.addVariable(course_label, course_available_terms)
+
+
 def get_possible_course_list(start_term, finish_term):
     """ Returns a possible course schedule,
         assuming student starts in start_term
@@ -78,28 +92,10 @@ def get_possible_course_list(start_term, finish_term):
     course_prerequisites = pd.read_excel('csp_course_rotations.xlsx', sheet_name='prereqs')
 
     # Foundation course terms
-    for _row_num, row in course_offerings[course_offerings.Type == 'foundation'].iterrows():
-        # Capture course information
-        course_label = row.Course
-        course_available_terms = create_term_list(list(row[row == 1].index))
-
-        # Remove terms beyond the Finish Term
-        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
-
-        # Add the variable to the problem
-        problem.addVariable(course_label, course_available_terms)
+    add_courses_to_problem_by_filter('foundation', course_offerings, finish_term, problem)
 
     # Core course terms
-    for _row_num, row in course_offerings[course_offerings.Type == 'core'].iterrows():
-        # Capture course information
-        course_label = row.Course
-        course_available_terms = create_term_list(list(row[row == 1].index))
-
-        # Remove terms beyond the Finish Term
-        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
-
-        # Add the variable to the problem
-        problem.addVariable(course_label, course_available_terms)
+    add_courses_to_problem_by_filter('core', course_offerings, finish_term, problem)
 
     # CS Electives course terms (-x = elective not taken)
     negative_elective_terms = []
@@ -119,16 +115,7 @@ def get_possible_course_list(start_term, finish_term):
         negative_elective_terms.append(-row_num)
 
     # Capstone
-    for _row_num, row in course_offerings[course_offerings.Type == 'capstone'].iterrows():
-        # Capture course information
-        course_label = row.Course
-        course_available_terms = create_term_list(list(row[row == 1].index))
-
-        # Remove terms beyond the Finish Term
-        course_available_terms = remove_terms_beyond_finish(course_available_terms, finish_term)
-
-        # Add the variable to the problem
-        problem.addVariable(course_label, course_available_terms)
+    add_courses_to_problem_by_filter('capstone', course_offerings, finish_term, problem)
 
     # Guarantee no repeats of courses and only once course per term
     problem.addConstraint(AllDifferentConstraint())
