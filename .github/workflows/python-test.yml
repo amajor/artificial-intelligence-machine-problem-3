@@ -20,6 +20,9 @@ jobs:
       - uses: BSFishy/pip-action@v1
         with:
           requirements: requirements.txt
+      - name: Install openpyxl for file opening
+        run: |
+          pip install openpyxl
       - name: List python packages
         run: |
           python -m pip list
