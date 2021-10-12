@@ -66,8 +66,6 @@ def get_possible_course_list(start_term, finish_term):
     """ Returns a possible course schedule,
         assuming student starts in start_term
         and finishes in finish_term. """
-    print('\nstart_term: ', start_term)
-    print('finish_term: ', finish_term, '\n')
     problem = Problem()
 
     # Read course_offerings file
