@@ -1,5 +1,7 @@
 """ The unit tests for the GenGameBoard class. """
 import unittest
+
+from constraint import Problem
 from parameterized import parameterized
 
 import mp3
@@ -53,9 +55,26 @@ class TestCoursePlanning(unittest.TestCase):
         ('Taking other course, not pre-req', -1, 1, False),
         ('Not taking pre-req or other course', 0, 0, True)
     ])
-    def test_pre_requisite(self, _test_name, taking_prerequisite, taking_course, expected):
+    def test_prerequisite_basic(self, _test_name, taking_prerequisite, taking_course, expected):
         """ Tests the limitations constraints for prerequisite courses. """
         actual = mp3.prerequisite(taking_prerequisite, taking_course)
+        self.assertEqual(expected, actual)
+
+    def test_prerequisite(self):
+        """ Tests the prerequisite as a constraint when solving a problem. """
+        problem = Problem()
+        problem.addVariable("Course1", [2, 4, 5])
+        problem.addVariable("Course2", [1, 3, 6])
+
+        # We treat Course1 as a prereq for Course2
+        problem.addConstraint(mp3.prerequisite, ["Course1", "Course2"])
+        expected = [
+            {'Course1': 5, 'Course2': 6},
+            {'Course1': 4, 'Course2': 6},
+            {'Course1': 2, 'Course2': 3},
+            {'Course1': 2, 'Course2': 6}
+        ]
+        actual = problem.getSolutions()
         self.assertEqual(expected, actual)
 
     def test_get_possible_course_list(self):

@@ -47,15 +47,15 @@ def map_to_term_label(term_num):
     return 'Year ' + year + ' ' + term_label
 
 
-def prerequisite(prerequisite_course, other_course):
+def prerequisite(prereq_course_term, other_course_term):
     """ Used for encoding prerequisite constraints, a is a prerequisite for b. """
-    if prerequisite_course > 0 and other_course > 0:
+    if prereq_course_term > 0 and other_course_term > 0:
         # Taking both pre-req course and other course
-        return prerequisite_course < other_course
-    if prerequisite_course > 0 > other_course:
+        return prereq_course_term < other_course_term
+    if prereq_course_term > 0 > other_course_term:
         # Taking pre-req course, but not other course
         return True
-    if prerequisite_course < 0 < other_course:
+    if prereq_course_term < 0 < other_course_term:
         # Taking other course, but not pre-req course
         return False
 
