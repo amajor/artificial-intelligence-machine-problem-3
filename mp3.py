@@ -122,6 +122,12 @@ def get_possible_course_list(start_term, finish_term):
 
     # Control start and finish terms
     problem.addConstraint(SomeInSetConstraint([start_term]))
+
+    # This only constrains that the finish_term is in the solution,
+    # however, it does not restrict terms beyond this term to NOT be
+    # in the solution. We have removed any terms beyond the finish term
+    # by applying the method remove_terms_beyond_finish() to the courses
+    # in an earlier step.
     problem.addConstraint(SomeInSetConstraint([finish_term]))
 
     # Control electives - exactly 3 courses must be chosen
