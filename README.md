@@ -90,3 +90,8 @@ You will need `openpyxl` to open the files.
 ```shell
 pip install openpyxl
 ```
+
+## Constraints
+
+Find documentation on constraints used in this solution at 
+[https://labix.org/doc/constraint/](https://labix.org/doc/constraint/)
